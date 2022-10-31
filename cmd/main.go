@@ -15,9 +15,9 @@ package main
 import (
 	"flag"
 
-	"github.com/maksim-paskal/envoy-sidecar-helper/pkg/api"
-	"github.com/maksim-paskal/envoy-sidecar-helper/pkg/client"
 	log "github.com/sirupsen/logrus"
+	"metricsadvisor.ai/envoy-helper/pkg/api"
+	"metricsadvisor.ai/envoy-helper/pkg/client"
 )
 
 var gitVersion = "dev"

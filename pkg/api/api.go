@@ -21,15 +21,16 @@ import (
 	"strings"
 	"time"
 
-	"github.com/maksim-paskal/envoy-sidecar-helper/pkg/client"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	"metricsadvisor.ai/envoy-helper/pkg/client"
 )
 
 var (
 	envoyHost      = flag.String("envoy.host", "http://127.0.0.1", "envoy host")
-	envoyPort      = flag.Int("envoy.port", 18000, "envoy port")
+	envoyPort      = flag.Int("envoy.port", 15020, "envoy port")
+	envoyProbePath = flag.String("envoy.probePath", "/healthz/ready", "path to check readiness of envoy")
 	podName        = flag.String("pod", os.Getenv("POD_NAME"), "pod name")
 	namespace      = flag.String("namespace", os.Getenv("POD_NAMESPACE"), "namespace")
 	containersName = flag.String("container", "", "containers to watch, may be splited by comma")
@@ -53,7 +54,7 @@ func CheckEnvoyStart() {
 	for {
 		time.Sleep(time.Second)
 
-		if err := makeCall("GET", "/ready"); err != nil {
+		if err := makeCall("GET", *envoyProbePath); err != nil {
 			log.WithError(err).Debug()
 		} else {
 			break

@@ -1,4 +1,4 @@
-module github.com/maksim-paskal/envoy-sidecar-helper
+module metricsadvisor.ai/envoy-helper
 
 go 1.17
 

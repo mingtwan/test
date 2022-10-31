@@ -1,10 +1,14 @@
-FROM alpine:latest
+####### distroless ########
+FROM golang:1.17 as build-env
 
-COPY ./envoy-sidecar-helper /app/envoy-sidecar-helper
+WORKDIR /go/src/app
+ADD . /go/src/app
 
-RUN addgroup -g 101 -S app \
-&& adduser -u 101 -D -S -G app app
+RUN go get -d -v ./...
 
-USER 101
+RUN go build -o /go/bin/app/envoyhelper /go/src/app/cmd
 
-ENTRYPOINT [ "/app/envoy-sidecar-helper" ]
+FROM gcr.io/distroless/base
+
+COPY --from=build-env /go/bin/app /
+ENTRYPOINT ["/envoyhelper"]
